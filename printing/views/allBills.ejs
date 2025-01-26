@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Bills - <%= shopDetails.name %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label, select, button {
+            font-size: 1em;
+        }
+
+        select, button {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #ffffff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        li a:hover {
+            text-decoration: underline;
+        }
+
+        li form {
+            display: inline;
+        }
+
+        li button {
+            padding: 5px 10px;
+            font-size: 0.9em;
+            color: #fff;
+            background-color: #e74c3c;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        li button:hover {
+            background-color: #c0392b;
+        }
+
+        a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>All Bills</h1>
+
+    <!-- Form for selecting month and year -->
+    <form action="/bills" method="GET">
+        <label for="month">Month:</label>
+        <select id="month" name="month" required>
+            <option value="">--Select Month--</option>
+            <% for (let i = 1; i <= 12; i++) { %>
+                <option value="<%= i %>" <%= selectedMonth == i ? 'selected' : '' %> >
+                    <%= new Date(0, i - 1).toLocaleString('default', { month: 'long' }) %>
+                </option>
+            <% } %>
+        </select>
+
+        <label for="year">Year:</label>
+        <select id="year" name="year" required>
+            <option value="">--Select Year--</option>
+            <% const currentYear = new Date().getFullYear(); %>
+            <% for (let y = currentYear - 10; y <= currentYear; y++) { %>
+                <option value="<%= y %>" <%= selectedYear == y ? 'selected' : '' %> >
+                    <%= y %>
+                </option>
+            <% } %>
+        </select>
+
+        <button type="submit">Filter</button>
+    </form>
+
+    <!-- Display filtered bills -->
+    <ul>
+        <% bills.forEach(function(bill) { %>
+            <li>
+                <span>
+                    <a href="/print-bill/<%= bill.id %>"><%= bill.customerName %></a> - ₹<%= bill.totalAmount %>
+                </span>
+                <span>
+                    <a href="/edit-bill/<%= bill.id %>">Edit</a>
+                    <form action="/delete-bill/<%= bill.id %>" method="POST" style="display:inline;">
+                        <button type="submit">Delete</button>
+                    </form>
+                </span>
+            </li>
+        <% }) %>
+    </ul>
+
+    <!-- Back to Home link -->
+    <a href="/">Back to Home</a>
+</body>
+</html>

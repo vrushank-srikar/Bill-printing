@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Bill - <%= shopDetails.name %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: #4CAF50;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        p {
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        label {
+            font-size: 1.1em;
+            display: inline-block;
+            width: 200px;
+            text-align: right;
+            margin-bottom: 5px;
+        }
+
+        input {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1em;
+            width: 300px;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .product {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .product label {
+            font-size: 1em;
+        }
+
+        .product input {
+            font-size: 1em;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        #product-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        button[type="button"] {
+            background-color: #007bff;
+        }
+
+        button[type="button"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Back to Home link -->
+        <a href="/">Back to Home</a>
+        <h1>Edit Bill</h1>
+        <p><strong>Bill ID:</strong> <%= bill.id %></p>
+
+        <!-- Edit Bill Form -->
+        <form action="/update-bill/<%= bill.id %>" method="POST">
+            <div class="form-group">
+                <label for="customerName">Customer Name:</label>
+                <input type="text" name="customerName" value="<%= bill.customerName %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="customerPhone">Customer Phone:</label>
+                <input type="text" name="customerPhone" value="<%= bill.customerPhone %>" required>
+            </div>
+
+            <h3>Products:</h3>
+            <div id="product-container">
+                <% bill.products.forEach(function(product, index) { %>
+                    <div class="product">
+                        <div class="form-group">
+                            <label for="productName">Product Name:</label>
+                            <input type="text" name="products[<%= index %>][name]" value="<%= product.name %>" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productPrice">Price:</label>
+                            <input type="number" name="products[<%= index %>][price]" value="<%= product.price %>" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productQuantity">Quantity:</label>
+                            <input type="number" name="products[<%= index %>][quantity]" value="<%= product.quantity %>" required>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+
+            <button type="button" onclick="addProduct()">Add Another Product</button>
+            <button type="submit">Update Bill</button>
+        </form>
+
+        <script>
+            function addProduct() {
+                const container = document.getElementById('product-container');
+                const newProduct = document.createElement('div');
+                newProduct.classList.add('product');
+                newProduct.innerHTML = `
+                    <div class="form-group">
+                        <label for="productName">Product Name:</label>
+                        <input type="text" name="products[${container.children.length}][name]" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productPrice">Price:</label>
+                        <input type="number" name="products[${container.children.length}][price]" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productQuantity">Quantity:</label>
+                        <input type="number" name="products[${container.children.length}][quantity]" required>
+                    </div>
+                `;
+                container.appendChild(newProduct);
+            }
+        </script>
+    </header>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Bill - <%= shopDetails.name %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            padding: 20px;
+            text-align: center;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            font-size: 2em;
+            margin: 10px 0;
+            color: #4CAF50;
+        }
+        p {
+            color: #555;
+        }
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            flex: 1;
+            font-weight: bold;
+        }
+        .form-group input {
+            flex: 2;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #product-container {
+            margin-top: 20px;
+        }
+        .product {
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/">Back to Home</a>
+        <h1>New Bill</h1>
+        <p>Shop: <%= shopDetails.name %></p>
+        <form action="/save-bill" method="POST">
+            <div class="form-group">
+                <label for="customerName">Customer Name:</label>
+                <input type="text" name="customerName" required>
+            </div>
+            <div class="form-group">
+                <label for="customerPhone">Customer Phone:</label>
+                <input type="text" name="customerPhone" required>
+            </div>
+
+            <h3>Products:</h3>
+            <div id="product-container">
+                <div class="product">
+                    <div class="form-group">
+                        <label for="productName">Product Name:</label>
+                        <input type="text" name="products[0][name]" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price:</label>
+                        <input type="number" name="products[0][price]" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productQuantity">Quantity:</label>
+                        <input type="number" name="products[0][quantity]" required>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="addProduct()">Add Another Product</button>
+            <br><br>
+            <button type="submit">Save Bill</button>
+        </form>
+    </header>
+    <script>
+        function addProduct() {
+            const container = document.getElementById('product-container');
+            const newProduct = document.createElement('div');
+            newProduct.classList.add('product');
+            newProduct.innerHTML = `
+                <div class="form-group">
+                    <label for="productName">Product Name:</label>
+                    <input type="text" name="products[${container.children.length}][name]" required>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Price:</label>
+                    <input type="number" name="products[${container.children.length}][price]" required>
+                </div>
+                <div class="form-group">
+                    <label for="productQuantity">Quantity:</label>
+                    <input type="number" name="products[${container.children.length}][quantity]" required>
+                </div>
+            `;
+            container.appendChild(newProduct);
+        }
+    </script>
+</body>
+</html>
